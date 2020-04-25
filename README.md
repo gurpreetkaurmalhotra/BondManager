@@ -8,7 +8,7 @@ Types of users (UserType enum)–
 Refer http://localhost:4480/swagger-ui.html for the list of apis
 
 Steps to run the project –
-1.	Mvn install
+1.	mvn clean install
 2.	java -Dserver.port=4480 -jar target/bond-manager-1.0-SNAPSHOT.jar --spring.profiles.active=dev
 
 

@@ -3,6 +3,6 @@ flows:
     - log: "On cron event."
 triggers:
   - cron:
-      spec: "0 0/1 * * * ?"
+      spec: "30 * * * *"
       entryPoint: default
 

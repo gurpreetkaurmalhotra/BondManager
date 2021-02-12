@@ -1,8 +1,38 @@
-flows:
-  default:
-    - log: "On cron event."
 triggers:
   - cron:
-      spec: "30 * * * *"
+      spec: '30 * * * *'
       entryPoint: default
+
+flows:
+  default:
+    - task: http
+      in:
+        method: GET
+        url: 'https://api.soochi.dev.cld.samsclub.com/v1/lists/sfl?clubId=6279&responseGroup=CART_INFO'
+        headers:
+          membership-no: "10142100205899795"
+          Content-Type: "application/json"
+          sams-svc-correlation-id: "w32443342r34r5-453r3r"
+        response: json
+        out: expiredOppResponse
+        debug: true
+    - if: ${expiredOppResponse.success}
+      then:
+        - log: 'Success response: ${expiredOppResponse}'
+        - call: notifySlack
+          in:
+            response: 'Get SFL api called successfully! ${expiredOppResponse.content}'
+      else:
+        - log: 'Failure response: ${expiredOppResponse}'
+        - call: notifySlack
+          in:
+            response: 'Get SFL api called successfully! ${expiredOppResponse.content}'
+
+  notifySlack:
+    - task: slack
+      in:
+        channelId: 'ecom-platform-team'
+        username: 'Cron Bot'
+        iconEmoji: ':cool-doge:'
+        text: ${response}
 
